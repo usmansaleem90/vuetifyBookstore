@@ -94,6 +94,14 @@ const ApiServices = {
     });
   },
 
-};
+  async  fetchProductsFromApi() {
+    try {
+      const response = await axios.get(`${BASE_URL}/book`);
+      return response.data.books;
+    } catch (error) {
+      throw error;
+    }
+  }
+}
 
 export default ApiServices;

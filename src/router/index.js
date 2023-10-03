@@ -15,30 +15,47 @@ const routes = [
         path: "",
         name: "Home",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/Login.vue"),
+          import( "@/views/Home.vue"),
       },
       {
         path: "/signup",
         component: () => import("../views/SignUp.vue"),
         name: "signup",
       },
-    ],
-  },
-  {
-    path: "/admin-dashboard",
-    component: () => import("../pages/AdminDasboard.vue"),
-    beforeEnter: (to, from, next) => {
-      if (isAuthenticated()) {
-        next();
-      } else {
-        alert("You need to be logged in to access the admin dashboard.");
-        next({ path: "/" });
-      }
+      {
+      path: "/login",
+      name: "Login",
+      component: () => import("@/views/Login.vue"),
     },
-    children: [
-      
+    {
+      path: "/products",
+      name: "Products",
+      component: () => import("../pages/Products.vue"),
+    },
+    {
+      path: "/contact",
+      name: "ContactUs",
+      component: () => import("../views/ContactUs.vue"),
+    },
+    {
+      path: '/products/:id',
+      name: 'product-details',
+      component: () =>import("../components/products/BooksDetails.vue"), // Create and import a ProductDetails component
+    },
     ],
   },
+  // {
+  //   path: "/admin-dashboard",
+  //   component: () => import("../pages/AdminDasboard.vue"),
+  //   beforeEnter: (to, from, next) => {
+  //     if (isAuthenticated()) {
+  //       next();
+  //     } else {
+  //       alert("You need to be logged in to access the admin dashboard.");
+  //       next({ path: "/" });
+  //     }
+  //   },
+  // },
 ]
 
 const router = createRouter({
