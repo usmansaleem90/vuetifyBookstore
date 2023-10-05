@@ -9,18 +9,18 @@ export const SideBarItems = {
       },
     },
     {
-      title: "Products",
+      title: "User Details",
       icon: "mdi-office-building",
       attrs: {
-        to: "/products",
+        to: "/userdetails",
         "active-class": "primary--text list-item-active",
       },
     },
     {
-      title: "About",
+      title: "Product Details",
       icon: "mdi-format-list-bulleted",
       attrs: {
-        to: "/about",
+        to: "/productdetails",
         "active-class": "primary--text list-item-active",
       },
     },
@@ -34,15 +34,3 @@ export const SideBarItems = {
     },
   ],
 };
-
-// Conditionally show "Dashboard" item based on the email in local storage
-if (localStorage.getItem("email") === "admin@gmail.com") {
-  SideBarItems.items.push({
-    title: "Dashboard",
-    icon: "mdi-account-multiple",
-    attrs: {
-      to: "/dashboard",
-      "active-class": "primary--text list-item-active",
-    },
-  });
-}

@@ -128,7 +128,7 @@ export default {
             };
             this.$router.push({ path: '/' });
             console.log('Form Data:', formData);
-            this.error = '';
+            this.error =  '';
         },
     },
 };

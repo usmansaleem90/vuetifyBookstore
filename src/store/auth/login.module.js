@@ -8,7 +8,10 @@ const state = {
 
 const mutations = {
   SET_LOGIN_CREDENTIALS(state, data) {
+    console.log(data)
     localStorage.setItem('token', data.token);
+    localStorage.setItem('email', data.user.email);
+
     state.loginCredentials = data;
 
     // Extract and store permissions
@@ -21,7 +24,7 @@ const actions = {
     try {
       const response = await ApiServices.login(email, password);
       commit('SET_LOGIN_CREDENTIALS', response);
-      router.push({ path: '/admin-dashboard' });
+      // router.push({ path: '/admin-dashboard' });
 
       // Log state.permissions in the next tick of the event loop
       setTimeout(() => {

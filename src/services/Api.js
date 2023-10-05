@@ -101,7 +101,109 @@ const ApiServices = {
     } catch (error) {
       throw error;
     }
-  }
+  },
+
+  async logout() {
+    try {
+      axios.post(`${BASE_URL}/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+       this.userAuthenticated = false;
+
+      this.$router.push('/login');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
+},
+
+postRating() {
+  // Make a POST request to add a rating
+  const bookId = this.$route.params.id;// Replace with the actual book ID
+  const ratingValue = this.newRating;
+  axios.post(`http://10.0.10.220:8080/api/detail/${bookId}`, {
+      rating: ratingValue, // Include the rating field within the request body
+  }, {
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+      },
+  })
+      .then(() => {
+          this.newRating = 0;
+      })
+      .catch((error) => {
+          console.error("Error posting rating:", error);
+      });
+},
+
+postReview() {
+  // Make a POST request to add a review
+  const bookId = this.$route.params.id;// Replace with the actual book ID
+  const ReviewValue = this.newReview;
+  axios.post(`http://10.0.10.220:8080/api/review/${bookId}`, {
+      text: ReviewValue
+  },
+      {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json',
+          },
+      })
+      .then(() => {
+          this.postRating();
+          this.newReview = "";
+      })
+      .catch((error) => {
+          console.error("Error posting review:", error);
+      });
+},
+userDetails(){
+  const bearerToken = localStorage.getItem("token");
+  
+  // Make an HTTP GET request to the API with authorization header
+  axios.get('http://10.0.10.220:8080/api/users', {
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  })
+  .then((response) => {
+    // Handle the successful response and set the users data
+    this.users = response.data.data;
+    console.log(this.users);
+  })
+  .catch((error) => {
+    console.error('Error fetching user data:', error);
+  });
+},
+async addtocart(){
+  let result = await axios.get(" http://10.0.10.220:8080/api/book");
+  
+  this.books = result.data.books;
+},
+BookDetails(){
+  const productId = this.$route.params.id;
+  console.log('Fetching data for product with ID:', productId);
+
+  fetch(`http://10.0.10.220:8080/api/book/${productId}`)
+      .then((res) => {
+          if (!res.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return res.json();
+      })
+      .then((data) => {
+          console.log(data.book);
+          this.book = data.book
+
+
+      })
+}
+  
 }
 
 export default ApiServices;

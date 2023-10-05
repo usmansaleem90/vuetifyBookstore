@@ -22,17 +22,41 @@
                         {{ book.description }}
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="custom-btn" color="primary">Add To Cart</v-btn>
+
+
+                        <v-btn color="blue-lighten-2" variant="text" @click="addToCart(book)">
+
+                            ADD Cart
+
+                        </v-btn>
+
                         <v-btn class="custom-btn" color="accent">Favorite</v-btn>
                     </v-card-actions>
                 </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <Reviews />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <GetDetails />
             </v-col>
         </v-row>
     </v-container>
 </template>
   
 <script>
+import Reviews from './Reviews.vue';
+import GetDetails from './GetDetails.vue';
+import ApiServices from '@/services/Api';
 export default {
+    components: {
+        Reviews,
+        GetDetails
+    },
     data() {
         return {
             book: null,
@@ -40,24 +64,32 @@ export default {
         };
     },
     async created() {
-        const productId = this.$route.params.id;
-        console.log('Fetching data for product with ID:', productId);
-
-        fetch(`http://10.0.10.220:8080/api/book/${productId}`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                console.log(data.book);
-                this.book = data.book
-
-
-            })
+       ApiServices.BookDetails()
 
     },
+    methods: {
+        addToCart(book) {
+
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            const existingProduct = cart.find((item) => item.id === book.id);
+
+            if (existingProduct) {
+
+                existingProduct.quantity++;
+
+            } else {
+
+                cart.push({ ...book, quantity: 1 });
+
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            this.$router.push("/cart");
+
+        },
+    }
 
 };
 </script>
@@ -113,39 +145,40 @@ export default {
 .custom-btn {
     margin-right: 10px;
 }
+
 .custom-card {
-  max-width: 400px;
-  margin: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
+    max-width: 400px;
+    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .custom-card-image {
-  object-fit: cover;
+    object-fit: cover;
 }
 
 .custom-card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
 }
 
 .custom-card-subtitle {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 5px;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 5px;
 }
 
 .custom-card-text {
-  font-size: 1rem;
-  color: #777;
-  margin-bottom: 10px;
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 10px;
 }
 
 .custom-btn {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 </style>
